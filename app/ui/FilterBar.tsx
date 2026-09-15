@@ -38,7 +38,7 @@ export default function FilterBar({ filters, buttons, className }: FilterBarProp
         </div>
       ))}
       {buttons && (
-        <div className="ml-auto flex gap-3">
+        <div className="lg:ml-auto   flex gap-3">
           {buttons.map((button, index) => (
             <button
               key={index}

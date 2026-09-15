@@ -5,7 +5,7 @@ import { pieChartData } from '../lib/data/districtData';
 
 export default function DistrictPieChart() {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height={450}>
       <PieChart>
         <Pie
           data={pieChartData}
@@ -32,7 +32,7 @@ export default function DistrictPieChart() {
         />
         <Legend 
           verticalAlign="bottom" 
-          height={36}
+          height={96}
           iconType="circle"
           formatter={(value) => <span className="text-sm text-gray-600 ml-2">{value}</span>}
         />

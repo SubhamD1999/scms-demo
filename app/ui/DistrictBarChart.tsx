@@ -8,31 +8,39 @@ export default function DistrictBarChart() {
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-        <XAxis 
-          dataKey="name" 
-          tick={{ fontSize: 11, fill: '#6b7280' }} 
+        <XAxis
+          dataKey="name"
+          tick={{ fontSize: 11, fill: '#6b7280' }}
           axisLine={false}
           tickLine={false}
           dy={10}
         />
-        <YAxis 
-          tick={{ fontSize: 11, fill: '#6b7280' }} 
+        <YAxis
+          tick={{ fontSize: 11, fill: '#6b7280' }}
           axisLine={false}
           tickLine={false}
         />
-        <Tooltip 
+        <Tooltip
           cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
-          contentStyle={{ 
+          contentStyle={{
             backgroundColor: '#fff',
-            border: 'none',
+            border: '1px solid #e5e7eb',
             borderRadius: '12px',
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
             padding: '12px'
           }}
+          labelStyle={{
+            color: '#111827',
+            fontWeight: 600,
+            marginBottom: 4
+          }}
+          itemStyle={{
+            color: '#3b82f6'
+          }}
         />
-        <Bar 
-          dataKey="value" 
-          fill="url(#colorGradient)" 
+        <Bar
+          dataKey="value"
+          fill="url(#colorGradient)"
           radius={[6, 6, 0, 0]}
           animationDuration={1000}
         />
