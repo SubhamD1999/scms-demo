@@ -180,7 +180,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Responsive Main Content */}
-      <main className="px-4 sm:px-6 lg:px-6 pt-24 sm:pt-36 space-y-6 w-[95%] sm:w-[90%] mx-auto">
+      <main className="px-4 sm:px-6 lg:px-6 pt-36 sm:pt-36 space-y-6 w-[95%] sm:w-[90%] mx-auto">
 
         {/* Stats Cards - Stacks on mobile, 2 cols on tablet, 4 on desktop */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -188,7 +188,7 @@ export default function DashboardPage() {
             { color: 'blue', label: 'Total Stores', value: '1,256', icon: Store, trend: '+12%', trendIcon: TrendingUp },
             { color: 'purple', label: 'Item Categories', value: '37', icon: Layers, trend: '+3 new', trendIcon: TrendingUp },
             { color: 'emerald', label: 'Total Items', value: '5,250', icon: Package, trend: '+8.2%', trendIcon: TrendingUp },
-            { color: 'orange', label: 'EDL Items', value: '804', icon: List, trend: '-2%', trendIcon: TrendingDown },
+            { color: 'red', label: 'EDL Items', value: '804', icon: List, trend: '-2%', trendIcon: TrendingDown },
           ].map((stat, idx) => (
             <div key={idx} className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-${stat.color}-500 to-${stat.color}-600 p-4 sm:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1`}>
               <div className="flex items-center justify-between">
@@ -209,7 +209,7 @@ export default function DashboardPage() {
         </section>
 
         {/* Dashboard Overview */}
-        <section className="mt-8 sm:mt-12">
+        {/* <section className="mt-8 sm:mt-12">
           <h2 className="text-xl sm:text-2xl text-gray-800 mb-4 sm:mb-6 flex items-center">
             <span className="w-1 h-6 sm:h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-3"></span>
             Dashboard Overview
@@ -217,11 +217,10 @@ export default function DashboardPage() {
 
           <div className="bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
 
-            {/* Tab Navigation */}
             <div className="flex flex-wrap border-b border-gray-200 bg-white/50 backdrop-blur-sm">
               {[
-                { id: 'total', label: 'Total Transaction', icon: FileText, color: 'blue' },
-                { id: 'average', label: 'Average Transaction', icon: TrendingUp, color: 'purple' },
+                { id: 'total', label: 'Total Transaction', icon: FileText, color: 'purple' },
+                { id: 'average', label: 'Average Transaction', icon: TrendingUp, color: 'blue' },
                 { id: 'today', label: "Today's Transaction", icon: TrendingUp, color: 'emerald' },
               ].map((tab) => (
                 <button
@@ -246,22 +245,22 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Tab Content - Now uses the separated component */}
             <div className="p-4 sm:p-8">
               {activeTab === 'total' && (
                 <TransactionView
                   title="Total Transaction"
                   data={totalTransactions}
-                  gradient="from-blue-500 via-blue-600 to-indigo-600"
-                  accentColor="blue"
+                  gradient="from-purple-500 via-purple-600 to-purple-600"
+                  accentColor="purple"
                 />
               )}
               {activeTab === 'average' && (
                 <TransactionView
                   title="Average Transaction (Last Month)"
                   data={averageTransactions}
-                  gradient="from-purple-500 via-purple-600 to-purple-600"
-                  accentColor="purple"
+                  gradient="from-blue-500 via-blue-600 to-indigo-600"
+                  accentColor="blue"
+                  
                 />
               )}
               {activeTab === 'today' && (
@@ -274,11 +273,11 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-        </section>
+        </section> */}
 
 
 
-        {/* 
+        
         
           <section className="mt-8 sm:mt-12">
           <h2 className="text-xl sm:text-2xl text-gray-800 mb-4 sm:mb-6 flex items-center">
@@ -326,7 +325,7 @@ export default function DashboardPage() {
         </section>
         
         
-        */}
+       
 
         {/* Filter Bar - Stack on mobile */}
         <div className="rounded-2xl border border-gray-100 p-4 sm:p-6 mt-8 sm:mt-12">
@@ -347,7 +346,7 @@ export default function DashboardPage() {
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
-              <h3 className="text-sm sm:text-base text-gray-600 font-semibold border-b border-gray-300 pb-2">All District Indent Quantity</h3>
+              <h3 className="text-sm sm:text-xl text-gray-600  border-b border-gray-300 pb-2">All District Indent Quantity</h3>
             </div>
             <div className="p-4 sm:p-6">
               <DistrictBarChart />
@@ -356,7 +355,7 @@ export default function DashboardPage() {
 
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
-              <h3 className="text-sm sm:text-base text-gray-600 font-semibold border-b border-gray-300 pb-2">District Distribution</h3>
+              <h3 className="text-sm sm:text-xl text-gray-600  border-b border-gray-300 pb-2">District Distribution</h3>
             </div>
             <div className="p-4 sm:p-6">
               <DistrictPieChart />
@@ -368,7 +367,7 @@ export default function DashboardPage() {
         <section className="space-y-4 sm:space-y-6">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-gray-50 to-white">
-              <h3 className="text-base sm:text-lg text-gray-800 font-bold">All Transactions Of All Districts</h3>
+              <h3 className="text-base sm:text-xl  text-gray-800">All Transactions Of All Districts</h3>
               <div className="flex gap-2 w-full sm:w-auto">
                 <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
                   <FileText size={14} className="sm:w-4 sm:h-4" />
@@ -391,7 +390,7 @@ export default function DashboardPage() {
 
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-gray-50 to-white">
-              <h3 className="text-base sm:text-lg text-gray-800 font-bold">All Transactions</h3>
+              <h3 className="text-base sm:text-xl text-gray-800">All Transactions</h3>
               <div className="flex gap-2 w-full sm:w-auto">
                 <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
                   <FileText size={14} className="sm:w-4 sm:h-4" />
