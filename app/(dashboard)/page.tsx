@@ -181,7 +181,7 @@ export default function DashboardPage() {
 
       {/* Responsive Main Content */}
       <main className='w-full flex justify-center' >
-      <div className="px-0 sm:px-0 lg:px-0 pt-36 sm:pt-36 space-y-6 w-[95%] sm:w-[90%] ">
+      <div className="px-0 sm:px-0 lg:px-0 pt-36 sm:pt-46 space-y-6 w-[95%] sm:w-[90%] ">
 
         {/* Stats Cards - Stacks on mobile, 2 cols on tablet, 4 on desktop */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -213,10 +213,243 @@ export default function DashboardPage() {
         
 
 
+{/* Dashboard Overview */}
+<section className="mt-8 sm:mt-12">
+
+  {/* Section Heading */}
+  <div className="flex items-center justify-between mb-5 sm:mb-6">
+    <div className="flex items-center gap-3">
+      <div className="w-1 h-7 sm:h-8 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600"></div>
+
+      <div>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">
+          Dashboard Overview
+        </h2>
+        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+          Overview of transaction activity and performance
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* Overview Cards */}
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
+
+    {[
+      {
+        title: 'Total Transaction',
+        subtitle: 'Overall transaction summary',
+        data: totalTransactions,
+        theme: {
+          accent: 'bg-blue-500',
+          iconBg: 'bg-blue-50',
+          iconText: 'text-blue-600',
+          value: 'text-gray-800',
+          hover: 'hover:border-blue-200',
+          shadow: 'hover:shadow-blue-100/60',
+        },
+      },
+      {
+        title: 'Average Transaction',
+        subtitle: 'Average transaction metrics',
+        data: averageTransactions,
+        theme: {
+          accent: 'bg-purple-500',
+          iconBg: 'bg-purple-50',
+          iconText: 'text-purple-600',
+          value: 'text-gray-800',
+          hover: 'hover:border-purple-200',
+          shadow: 'hover:shadow-purple-100/60',
+        },
+      },
+      {
+        title: "Today's Transaction",
+        subtitle: 'Transaction activity for today',
+        data: todayTransactions,
+        theme: {
+          accent: 'bg-emerald-500',
+          iconBg: 'bg-emerald-50',
+          iconText: 'text-emerald-600',
+          value: 'text-gray-800',
+          hover: 'hover:border-emerald-200',
+          shadow: 'hover:shadow-emerald-100/60',
+        },
+      },
+    ].map((section, idx) => (
+
+      <div
+        key={idx}
+        className={`
+          relative bg-white rounded-2xl
+          border border-gray-100
+          shadow-md
+          overflow-hidden
+          transition-all duration-300
+          hover:shadow-lg
+          ${section.theme.hover}
+          ${section.theme.shadow}
+        `}
+      >
+
+        {/* Top Accent */}
+        <div className={`absolute top-0 left-0 right-0 h-1 ${section.theme.accent}`} />
+
+        {/* Card Header */}
+        <div className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+
+          <div className="flex items-start justify-between">
+
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-gray-800">
+                {section.title}
+              </h3>
+
+              <p className="text-xs text-gray-400 mt-1">
+                {section.subtitle}
+              </p>
+            </div>
+
+            {/* Small indicator */}
+            <div
+              className={`
+                w-2.5 h-2.5 rounded-full
+                ${section.theme.accent}
+                mt-1.5
+              `}
+            />
+          </div>
+
+        </div>
+
+        {/* Metrics */}
+        <div className="px-4 sm:px-5 pb-5 sm:pb-6">
+
+          <div className="grid grid-cols-2 gap-3">
+
+            {section.data.map((metric) => (
+
+              <div
+                key={metric.id}
+                className="
+                  group
+                  relative
+                  rounded-xl
+                  border border-gray-100
+                  bg-gray-50/70
+                  p-3.5 sm:p-4
+                  transition-all duration-200
+                  hover:bg-white
+                  hover:shadow-sm
+                  hover:border-gray-200
+                "
+              >
+
+                <div className="flex items-start gap-3">
+
+                  {/* Icon */}
+                  <div
+                    className={`
+                      shrink-0
+                      w-9 h-9 sm:w-10 sm:h-10
+                      rounded-lg
+                      ${section.theme.iconBg}
+                      ${section.theme.iconText}
+                      flex items-center justify-center
+                      transition-transform duration-200
+                      group-hover:scale-105
+                    `}
+                  >
+
+                    {metric.iconName === 'FileText' && (
+                      <FileText size={18} />
+                    )}
+
+                    {metric.iconName === 'Send' && (
+                      <TrendingUp size={18} />
+                    )}
+
+                    {metric.iconName === 'Download' && (
+                      <Download size={18} />
+                    )}
+
+                    {metric.iconName === 'AlertTriangle' && (
+                      <TrendingDown size={18} />
+                    )}
+
+                    {metric.iconName === 'TrendingUp' && (
+                      <TrendingUp size={18} />
+                    )}
+
+                    {metric.iconName === 'TrendingDown' && (
+                      <TrendingDown size={18} />
+                    )}
+
+                    {metric.iconName === 'BarChart2' && (
+                      <TrendingUp size={18} />
+                    )}
+
+                    {metric.iconName === 'Clock' && (
+                      <TrendingDown size={18} />
+                    )}
+
+                    {metric.iconName === 'Calendar' && (
+                      <TrendingUp size={18} />
+                    )}
+
+                    {metric.iconName === 'CheckCircle' && (
+                      <TrendingUp size={18} />
+                    )}
+
+                  </div>
+
+                  {/* Text */}
+                  <div className="min-w-0 pt-0.5">
+
+                    <p className="
+                      text-xl
+                      sm:text-2xl
+                      font-bold
+                      text-gray-800
+                      tracking-tight
+                      leading-none
+                      tabular-nums
+                    ">
+                      {metric.value}
+                    </p>
+
+                    <p className="
+                      text-[11px]
+                      sm:text-xs
+                      text-gray-500
+                      font-medium
+                      mt-1.5
+                      leading-tight
+                    ">
+                      {metric.label}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</section>
 
 
-
-        <section className="mt-8 sm:mt-12">
+        {/* <section className="mt-8 sm:mt-12">
           <h2 className="text-xl sm:text-2xl text-gray-500 mb-4 sm:mb-6 flex items-center font-semibold">
             <span className="w-1 h-6  sm:h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-3"></span>
             Dashboard Overview
@@ -259,7 +492,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
 
 
 
