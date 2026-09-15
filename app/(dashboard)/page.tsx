@@ -1,5 +1,5 @@
 "use client";
-
+import { useState, useEffect } from 'react';
 import type { Column } from '../ui/DataTable';
 import { Download, FileText, Printer, TrendingUp, TrendingDown, Package, Store, Layers, List } from 'lucide-react';
 import StatCard from '../ui/StatCard';
@@ -30,6 +30,28 @@ type TransactionRow = {
 };
 
 export default function DashboardPage() {
+
+ const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
 const districtColumns: Column<DistrictRow>[] = [
   { 
     header: 'SL NO', 
@@ -139,23 +161,31 @@ const transactionColumns: Column<TransactionRow>[] = [
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-white to-white">
-      <header className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white shadow-lg px-14">
-        <div className="px-6 py-5">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">SCMS Dashboard</h1>
-              <p className="text-blue-100 mt-1 text-sm">Supply Chain Management System</p>
+       <header 
+        className={`
+          w-[90%] flex justify-center items-center fixed top-5 left-1/2 transform -translate-x-1/2 z-50 shadow-md
+          transition-all duration-300 ease-in-out
+          ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-[150%] opacity-0'}
+        `}
+      >
+        <section className="bg-gradient-to-r rounded-xl from-blue-600 via-blue-700 to-indigo-700 text-white w-full shadow-lg px-14" >
+          <div className="px-6 py-5">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">SCMS Dashboard</h1>
+                <p className="text-blue-100 mt-1 text-sm">Supply Chain Management System</p>
+              </div>
+              <select className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium focus:outline-none focus:ring-2 focus:ring-white/50">
+                <option className="text-gray-800">National Health Mission</option>
+                <option className="text-gray-800">AGMC & GBP Hospital</option>
+                <option className="text-gray-800">National AYUSH Mission, Tripura</option>
+              </select>
             </div>
-            <select className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium focus:outline-none focus:ring-2 focus:ring-white/50">
-              <option className="text-gray-800">National Health Mission</option>
-              <option className="text-gray-800">AGMC & GBP Hospital</option>
-              <option className="text-gray-800">National AYUSH Mission, Tripura</option>
-            </select>
           </div>
-        </div>
+        </section>
       </header>
 
-      <main className="p-20 space-y-6 max-w-8xl mx-auto">
+        <main className="p-20 space-y-6 max-w-8xl mx-auto mt-20">
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center justify-between">
