@@ -30,14 +30,14 @@ export default function DataTable<T extends Record<string, unknown>>({
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
       <table className="w-full text-left border-collapse">
-        <thead className='bg-blue-500' >
+        <thead className='' >
           <tr className="border-b-2 border-indigo-100 bg-slate-50/70">
             {columns.map((col, index) => (
               <th
                 key={index}
                 scope="col"
                 className={cn(
-                  "px-6 py-3.5 text-xs font-semibold text-black whitespace-nowrap",
+                  "px-6 py-3.5 text-xs bg-blue-600 font-semibold text-white whitespace-nowrap",
                   col.className
                 )}
               >

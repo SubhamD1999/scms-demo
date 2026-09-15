@@ -181,7 +181,7 @@ export default function DashboardPage() {
 
       {/* Responsive Main Content */}
       <main className='w-full flex justify-center' >
-      <div className="px-0 sm:px-0 lg:px-0 pt-36 sm:pt-46 space-y-6 w-[95%] sm:w-[90%] ">
+      <div className="px-0 sm:px-0 lg:px-6 pt-36 sm:pt-46 space-y-6 w-[95%] sm:w-[90%] ">
 
         {/* Stats Cards - Stacks on mobile, 2 cols on tablet, 4 on desktop */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
