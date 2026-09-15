@@ -1,4 +1,7 @@
 "use client";
+
+
+
 import { useState, useEffect } from 'react';
 import type { Column } from '../ui/DataTable';
 import { Download, FileText, Printer, TrendingUp, TrendingDown, Package, Store, Layers, List } from 'lucide-react';
@@ -10,6 +13,7 @@ import DistrictBarChart from '../ui/DistrictBarChart';
 import DistrictPieChart from '../ui/DistrictPieChart';
 import DataTable from '../ui/DataTable';
 import { allTransactionsData, districtTableData } from '../lib/data/transactionData';
+import TransactionView from '../ui/supportingComp';
 
 type DistrictRow = {
   sl_no: number;
@@ -30,152 +34,142 @@ type TransactionRow = {
 };
 
 export default function DashboardPage() {
-
- const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
+  const [activeTab, setActiveTab] = useState('total');
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
-
       setLastScrollY(currentScrollY);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-const districtColumns: Column<DistrictRow>[] = [
-  { 
-    header: 'SL NO', 
-    accessor: 'sl_no',
-    className: "w-20 text-center",
-    render: (item) => (
-      <span className="text-sm text-gray-500 font-medium">{item.sl_no}</span>
-    )
-  },
-  { 
-    header: 'DISTRICT/STORE NAME', 
-    accessor: 'district_name',
-    render: (item) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-        {item.district_name}
-      </span>
-    )
-  },
-  { 
-    header: 'NO. OF TOTAL INDENT', 
-    accessor: 'total_indent',
-    render: (item) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-100">
-        {item.total_indent.toLocaleString()}
-      </span>
-    )
-  },
-  { 
-    header: 'ANNUAL INDENT', 
-    accessor: 'annual_indent',
-    render: (item) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-100">
-        {item.annual_indent.toLocaleString()}
-      </span>
-    )
-  },
-];
-
-
-const transactionColumns: Column<TransactionRow>[] = [
-  { 
-    header: 'SL NO', 
-    accessor: 'sl_no',
-    className: "w-16 text-center", 
-    render: (item) => (
-      <span className="text-sm text-gray-500 font-medium">{item.sl_no}</span>
-    )
-  },
-  { 
-    header: 'DISTRICT NAME', 
-    render: (item: TransactionRow) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-        {item.district_name}
-      </span>
-    ) 
-  },
-  { 
-    header: 'FACILITY TYPE', 
-    accessor: 'facility_type',
-    render: (item) => (
-       <span className="text-sm text-gray-600">{item.facility_type}</span>
-    )
-  },
-  { 
-    header: 'STORE NAME', 
-    render: (item: TransactionRow) => (
-      <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-900 leading-tight">
-          {item.store_name}
+  const districtColumns: Column<DistrictRow>[] = [
+    {
+      header: 'SL NO',
+      accessor: 'sl_no',
+      className: "w-16 text-center", // Narrower for mobile
+      render: (item) => <span className="text-sm text-gray-500 font-medium">{item.sl_no}</span>
+    },
+    {
+      header: 'DISTRICT NAME', // Shortened header for mobile
+      accessor: 'district_name',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 whitespace-nowrap">
+          {item.district_name}
         </span>
-        {item.status && (
-           <span className="text-xs text-green-600 mt-0.5 flex items-center gap-1">
-             Verified
-           </span>
-        )}
-      </div>
-    ) 
-  },
-  { 
-    header: 'TOTAL INDENT', 
-    accessor: 'total_indent',
-    render: (item) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-100">
-        {item.total_indent.toLocaleString()}
-      </span>
-    )
-  },
-  { 
-    header: 'ITEMS ISSUED', 
-    accessor: 'total_item_issued',
-    render: (item) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-100">
-        {item.total_item_issued.toLocaleString()}
-      </span>
-    )
-  },
-  { 
-    header: 'RECEIPTS', 
-    accessor: 'total_receipt',
-    render: (item) => (
-      <span className="text-sm text-gray-600 tabular-nums">
-        {item.total_receipt.toLocaleString()}
-      </span>
-    )
-  },
-];
+      )
+    },
+    {
+      header: 'TOTAL INDENT',
+      accessor: 'total_indent',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-100 whitespace-nowrap">
+          {item.total_indent.toLocaleString()}
+        </span>
+      )
+    },
+    {
+      header: 'ANNUAL', // Shortened header
+      accessor: 'annual_indent',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-100 whitespace-nowrap">
+          {item.annual_indent.toLocaleString()}
+        </span>
+      )
+    },
+  ];
+
+  const transactionColumns: Column<TransactionRow>[] = [
+    {
+      header: 'SL',
+      accessor: 'sl_no',
+      className: "w-12 text-center",
+      render: (item) => <span className="text-sm text-gray-500 font-medium">{item.sl_no}</span>
+    },
+    {
+      header: 'DISTRICT',
+      render: (item: TransactionRow) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 whitespace-nowrap">
+          {item.district_name}
+        </span>
+      )
+    },
+    {
+      header: 'TYPE',
+      accessor: 'facility_type',
+      render: (item) => <span className="text-sm text-gray-600 whitespace-nowrap">{item.facility_type}</span>
+    },
+    {
+      header: 'STORE NAME',
+      render: (item: TransactionRow) => (
+        <div className="flex flex-col min-w-[150px]"> {/* Min width prevents crushing */}
+          <span className="text-sm font-medium text-gray-900 leading-tight truncate max-w-[200px]" title={item.store_name}>
+            {item.store_name}
+          </span>
+          {item.status && (
+            <span className="text-xs text-green-600 mt-0.5 flex items-center gap-1 whitespace-nowrap">
+              Verified
+            </span>
+          )}
+        </div>
+      )
+    },
+    {
+      header: 'INDENT',
+      accessor: 'total_indent',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-100 whitespace-nowrap">
+          {item.total_indent.toLocaleString()}
+        </span>
+      )
+    },
+    {
+      header: 'ISSUED',
+      accessor: 'total_item_issued',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-100 whitespace-nowrap">
+          {item.total_item_issued.toLocaleString()}
+        </span>
+      )
+    },
+    {
+      header: 'RECEIPTS',
+      accessor: 'total_receipt',
+      render: (item) => (
+        <span className="text-sm text-gray-600 tabular-nums whitespace-nowrap">
+          {item.total_receipt.toLocaleString()}
+        </span>
+      )
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-white to-white">
-       <header 
+    <div className="min-h-screen bg-gradient-to-br from-white via-white to-white pb-10">
+
+      {/* Mobile-Friendly Header */}
+      <header
         className={`
-          w-[90%] flex justify-center items-center fixed top-5 left-1/2 transform -translate-x-1/2 z-50 shadow-md
+          w-[95%] sm:w-[90%] flex justify-center items-center fixed top-3 sm:top-5 left-1/2 transform -translate-x-1/2 z-50 shadow-md
           transition-all duration-300 ease-in-out
           ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-[150%] opacity-0'}
         `}
       >
-        <section className="bg-gradient-to-r rounded-xl from-blue-600 via-blue-700 to-indigo-700 text-white w-full shadow-lg px-14" >
-          <div className="px-6 py-5">
-            <div className="flex justify-between items-center">
+        <section className="bg-gradient-to-r rounded-xl from-blue-600 via-blue-700 to-indigo-700 text-white w-full shadow-lg px-4 sm:px-8" >
+          <div className="py-3 sm:py-5">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">SCMS Dashboard</h1>
-                <p className="text-blue-100 mt-1 text-sm">Supply Chain Management System</p>
+                <h1 className="text-xl sm:text-3xl font-bold tracking-tight">SCMS Dashboard</h1>
+                <p className="text-blue-100 mt-0.5 sm:mt-1 text-xs sm:text-sm">Supply Chain Management System</p>
               </div>
-              <select className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium focus:outline-none focus:ring-2 focus:ring-white/50">
+              <select className="w-full sm:w-auto px-3 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium focus:outline-none focus:ring-2 focus:ring-white/50 text-sm">
                 <option className="text-gray-800">National Health Mission</option>
                 <option className="text-gray-800">AGMC & GBP Hospital</option>
                 <option className="text-gray-800">National AYUSH Mission, Tripura</option>
@@ -185,160 +179,162 @@ const transactionColumns: Column<TransactionRow>[] = [
         </section>
       </header>
 
-        <main className="p-20 space-y-6 max-w-8xl mx-auto mt-20">
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm font-medium mb-1">Total Stores</p>
-                <p className="text-4xl font-bold">1,256</p>
-              </div>
-              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Store size={28} />
-              </div>
-            </div>
-            <div className="mt-4 flex items-center text-sm text-blue-100">
-              <TrendingUp size={16} className="mr-1" />
-              <span>+12% from last month</span>
-            </div>
-          </div>
+      {/* Responsive Main Content */}
+      <main className="px-4 sm:px-6 lg:px-6 pt-24 sm:pt-36 space-y-6 w-[95%] sm:w-[90%] mx-auto">
 
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-100 text-sm font-medium mb-1">Item Categories</p>
-                <p className="text-4xl font-bold">37</p>
+        {/* Stats Cards - Stacks on mobile, 2 cols on tablet, 4 on desktop */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {[
+            { color: 'blue', label: 'Total Stores', value: '1,256', icon: Store, trend: '+12%', trendIcon: TrendingUp },
+            { color: 'purple', label: 'Item Categories', value: '37', icon: Layers, trend: '+3 new', trendIcon: TrendingUp },
+            { color: 'emerald', label: 'Total Items', value: '5,250', icon: Package, trend: '+8.2%', trendIcon: TrendingUp },
+            { color: 'orange', label: 'EDL Items', value: '804', icon: List, trend: '-2%', trendIcon: TrendingDown },
+          ].map((stat, idx) => (
+            <div key={idx} className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-${stat.color}-500 to-${stat.color}-600 p-4 sm:p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className={`text-${stat.color}-100 text-xs sm:text-sm font-medium mb-1`}>{stat.label}</p>
+                  <p className="text-2xl sm:text-4xl font-bold">{stat.value}</p>
+                </div>
+                <div className="p-2 sm:p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <stat.icon size={20} className="sm:w-7 sm:h-7" />
+                </div>
               </div>
-              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Layers size={28} />
+              <div className="mt-3 sm:mt-4 flex items-center text-xs sm:text-sm text-white/80">
+                <stat.trendIcon size={14} className="mr-1" />
+                <span>{stat.trend} from last month</span>
               </div>
             </div>
-            <div className="mt-4 flex items-center text-sm text-purple-100">
-              <TrendingUp size={16} className="mr-1" />
-              <span>+3 new categories</span>
-            </div>
-          </div>
+          ))}
+        </section>
 
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-emerald-100 text-sm font-medium mb-1">Total Items</p>
-                <p className="text-4xl font-bold">5,250</p>
-              </div>
-              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Package size={28} />
-              </div>
-            </div>
-            <div className="mt-4 flex items-center text-sm text-emerald-100">
-              <TrendingUp size={16} className="mr-1" />
-              <span>+8.2% increase</span>
-            </div>
-          </div>
+        {/* Dashboard Overview */}
+        <section className="mt-8 sm:mt-12">
+          <h2 className="text-xl sm:text-2xl text-gray-800 mb-4 sm:mb-6 flex items-center">
+            <span className="w-1 h-6 sm:h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-3"></span>
+            Dashboard Overview
+          </h2>
 
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-100 text-sm font-medium mb-1">EDL Items</p>
-                <p className="text-4xl font-bold">804</p>
-              </div>
-              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <List size={28} />
-              </div>
+          <div className="bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+
+            {/* Tab Navigation */}
+            <div className="flex flex-wrap border-b border-gray-200 bg-white/50 backdrop-blur-sm">
+              {[
+                { id: 'total', label: 'Total Transaction', icon: FileText, color: 'blue' },
+                { id: 'average', label: 'Average Transaction', icon: TrendingUp, color: 'purple' },
+                { id: 'today', label: "Today's Transaction", icon: TrendingUp, color: 'emerald' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+            flex-1 min-w-[140px] px-4 sm:px-6 py-4 flex items-center justify-center gap-2 
+            text-sm sm:text-base font-semibold transition-all duration-300 relative
+            ${activeTab === tab.id
+                      ? `text-${tab.color}-600`
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    }
+          `}
+                >
+                  <tab.icon size={18} />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                  {activeTab === tab.id && (
+                    <span className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-${tab.color}-500 to-${tab.color}-600 rounded-t-full`} />
+                  )}
+                </button>
+              ))}
             </div>
-            <div className="mt-4 flex items-center text-sm text-orange-100">
-              <TrendingDown size={16} className="mr-1" />
-              <span>-2% from last month</span>
+
+            {/* Tab Content - Now uses the separated component */}
+            <div className="p-4 sm:p-8">
+              {activeTab === 'total' && (
+                <TransactionView
+                  title="Total Transaction"
+                  data={totalTransactions}
+                  gradient="from-blue-500 via-blue-600 to-indigo-600"
+                  accentColor="blue"
+                />
+              )}
+              {activeTab === 'average' && (
+                <TransactionView
+                  title="Average Transaction (Last Month)"
+                  data={averageTransactions}
+                  gradient="from-purple-500 via-purple-600 to-purple-600"
+                  accentColor="purple"
+                />
+              )}
+              {activeTab === 'today' && (
+                <TransactionView
+                  title="Today's Transaction"
+                  data={todayTransactions}
+                  gradient="from-emerald-500 via-emerald-600 to-teal-600"
+                  accentColor="emerald"
+                />
+              )}
             </div>
           </div>
         </section>
 
-        <section className="mt-12" >
-          <h2 className="text-2xl  text-gray-800 mb-6 flex items-center">
-            <span className="w-1 h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-3"></span>
+
+
+        {/* 
+        
+          <section className="mt-8 sm:mt-12">
+          <h2 className="text-xl sm:text-2xl text-gray-800 mb-4 sm:mb-6 flex items-center">
+            <span className="w-1 h-6 sm:h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-3"></span>
             Dashboard Overview
           </h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                <h3 className="text-lg  text-white">Total Transaction</h3>
-              </div>
-              <div className="p-6 grid grid-cols-2 gap-4">
-                {totalTransactions.map(metric => (
-                  <div key={metric.id} className="group p-4 rounded-xl bg-blue-50 transition-colors duration-200 border border-gray-100 hover:border-blue-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
-                        {metric.iconName === 'FileText' && <FileText size={20} className="text-blue-600" />}
-                        {metric.iconName === 'Send' && <TrendingUp size={20} className="text-orange-600" />}
-                        {metric.iconName === 'Download' && <Download size={20} className="text-green-600" />}
-                        {metric.iconName === 'AlertTriangle' && <TrendingDown size={20} className="text-red-600" />}
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-gray-500">{metric.value}</p>
-                        <p className="text-xs text-gray-500 font-medium">{metric.label}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
-                <h3 className="text-lg  text-white">Average Transaction</h3>
-              </div>
-              <div className="p-6 grid grid-cols-2 gap-4">
-                {averageTransactions.map(metric => (
-                  <div key={metric.id} className="group p-4 rounded-xl bg-purple-50 transition-colors duration-200 border border-gray-100 hover:border-purple-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
-                        {metric.iconName === 'TrendingUp' && <TrendingUp size={20} className="text-green-600" />}
-                        {metric.iconName === 'TrendingDown' && <TrendingDown size={20} className="text-red-600" />}
-                        {metric.iconName === 'BarChart2' && <TrendingUp size={20} className="text-blue-600" />}
-                        {metric.iconName === 'Clock' && <TrendingDown size={20} className="text-orange-600" />}
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-gray-500">{metric.value}</p>
-                        <p className="text-xs text-gray-500 font-medium">{metric.label}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[
+              { title: 'Total Transaction', data: totalTransactions, gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'hover:border-blue-200' },
+              { title: 'Average Transaction', data: averageTransactions, gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'hover:border-purple-200' },
+              { title: "Today's Transaction", data: todayTransactions, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'hover:border-emerald-200' },
+            ].map((section, idx) => (
+              <div key={idx} className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className={`bg-gradient-to-r ${section.gradient} px-4 sm:px-6 py-3 sm:py-4`}>
+                  <h3 className="text-base sm:text-lg text-white font-semibold">{section.title}</h3>
+                </div>
+                <div className="p-4 sm:p-6 grid grid-cols-2 gap-3 sm:gap-4">
+                  {section.data.map(metric => (
+                    <div key={metric.id} className={`group p-3 sm:p-4 rounded-xl ${section.bg} transition-colors duration-200 border border-gray-100 ${section.border}`}>
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-shadows shrink-0">
+                          {metric.iconName === 'FileText' && <FileText size={16} className="sm:w-5 sm:h-5 text-blue-600" />}
+                          {metric.iconName === 'Send' && <TrendingUp size={16} className="sm:w-5 sm:h-5 text-orange-600" />}
+                          {metric.iconName === 'Download' && <Download size={16} className="sm:w-5 sm:h-5 text-green-600" />}
+                          {metric.iconName === 'AlertTriangle' && <TrendingDown size={16} className="sm:w-5 sm:h-5 text-red-600" />}
+                          {metric.iconName === 'TrendingUp' && <TrendingUp size={16} className="sm:w-5 sm:h-5 text-green-600" />}
+                          {metric.iconName === 'TrendingDown' && <TrendingDown size={16} className="sm:w-5 sm:h-5 text-red-600" />}
+                          {metric.iconName === 'BarChart2' && <TrendingUp size={16} className="sm:w-5 sm:h-5 text-blue-600" />}
+                          {metric.iconName === 'Clock' && <TrendingDown size={16} className="sm:w-5 sm:h-5 text-orange-600" />}
+                          {metric.iconName === 'Calendar' && <TrendingUp size={16} className="sm:w-5 sm:h-5 text-blue-600" />}
+                          {metric.iconName === 'CheckCircle' && <TrendingUp size={16} className="sm:w-5 sm:h-5 text-emerald-600" />}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-lg sm:text-xl font-bold text-gray-700 truncate">{metric.value}</p>
+                          <p className="text-[10px] sm:text-xs text-gray-500 font-medium truncate">{metric.label}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4">
-                <h3 className="text-lg  text-white">Today's Transaction</h3>
-              </div>
-              <div className="p-6 grid grid-cols-2 gap-4">
-                {todayTransactions.map(metric => (
-                  <div key={metric.id} className="group p-4 rounded-xl bg-emerald-50 transition-colors duration-200 border border-gray-100 hover:border-emerald-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
-                        {metric.iconName === 'Calendar' && <TrendingUp size={20} className="text-blue-600" />}
-                        {metric.iconName === 'Send' && <TrendingUp size={20} className="text-orange-600" />}
-                        {metric.iconName === 'Download' && <Download size={20} className="text-green-600" />}
-                        {metric.iconName === 'CheckCircle' && <TrendingUp size={20} className="text-emerald-600" />}
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-gray-500">{metric.value}</p>
-                        <p className="text-xs text-gray-500 font-medium">{metric.label}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </section>
+        
+        
+        */}
 
-        <div className=" rounded-2xl  border border-gray-100 p-6 mt-12">
+        {/* Filter Bar - Stack on mobile */}
+        <div className="rounded-2xl border border-gray-100 p-4 sm:p-6 mt-8 sm:mt-12">
           <FilterBar
             filters={[
-              { label: 'Transaction Type', options: [{ value: 'indent', label: 'Indent' }, { value: 'return', label: 'Return' }] },
-              { label: 'Status', options: [{ value: 'all', label: 'All Transactions' }, { value: 'trans1', label: ' Transaction1' },  ] },
-              { label: 'District', options: [{ value: 'all', label: 'All Districts' },{ value: 'dis1', label: 'District 1' }] },
+              { label: 'Type', options: [{ value: 'indent', label: 'Indent' }, { value: 'return', label: 'Return' }] },
+              { label: 'Status', options: [{ value: 'all', label: 'All Transactions' }, { value: 'trans1', label: 'Transaction 1' }] },
+              { label: 'District', options: [{ value: 'all', label: 'All Districts' }, { value: 'dis1', label: 'District 1' }] },
             ]}
             buttons={[
               { label: 'Indent Details', variant: 'primary' },
@@ -347,69 +343,76 @@ const transactionColumns: Column<TransactionRow>[] = [
           />
         </div>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Charts - Stack on mobile */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-md  text-gray-600 border-b border-gray-300  p-4">All District Indent Quantity</h3>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
+              <h3 className="text-sm sm:text-base text-gray-600 font-semibold border-b border-gray-300 pb-2">All District Indent Quantity</h3>
             </div>
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <DistrictBarChart />
             </div>
           </div>
-          
+
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-md  text-gray-600 border-b border-gray-300  p-4">District Distribution</h3>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
+              <h3 className="text-sm sm:text-base text-gray-600 font-semibold border-b border-gray-300 pb-2">District Distribution</h3>
             </div>
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <DistrictPieChart />
             </div>
           </div>
         </section>
 
-        <section className="grid grid-cols-1  gap-6">
+        {/* Tables - Horizontal Scroll on Mobile */}
+        <section className="space-y-4 sm:space-y-6">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white">
-              <h3 className="text-lg  text-gray-800">All Transactions Of All Districts</h3>
-              <div className="flex gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg">
-                  <FileText size={16} />
-                  <span className="text-sm font-medium">Excel</span>
+            <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-gray-50 to-white">
+              <h3 className="text-base sm:text-lg text-gray-800 font-bold">All Transactions Of All Districts</h3>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
+                  <FileText size={14} className="sm:w-4 sm:h-4" />
+                  <span>Excel</span>
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg">
-                  <Printer size={16} />
-                  <span className="text-sm font-medium">Print</span>
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
+                  <Printer size={14} className="sm:w-4 sm:h-4" />
+                  <span>Print</span>
                 </button>
               </div>
             </div>
-            <DataTable
-              data={districtTableData}
-              columns={districtColumns}
-            />
+            {/* Horizontal scroll wrapper for mobile tables */}
+            <div className="overflow-x-auto">
+              <DataTable
+                data={districtTableData}
+                columns={districtColumns}
+              />
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white">
-              <h3 className="text-lg  text-gray-800">All Transactions</h3>
-              <div className="flex gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg">
-                  <FileText size={16} />
-                  <span className="text-sm font-medium">PDF</span>
+            <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-gray-50 to-white">
+              <h3 className="text-base sm:text-lg text-gray-800 font-bold">All Transactions</h3>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
+                  <FileText size={14} className="sm:w-4 sm:h-4" />
+                  <span>PDF</span>
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg">
-                  <FileText size={16} />
-                  <span className="text-sm font-medium">Excel</span>
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
+                  <FileText size={14} className="sm:w-4 sm:h-4" />
+                  <span>Excel</span>
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg">
-                  <Printer size={16} />
-                  <span className="text-sm font-medium">Print</span>
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm font-medium">
+                  <Printer size={14} className="sm:w-4 sm:h-4" />
+                  <span>Print</span>
                 </button>
               </div>
             </div>
-            <DataTable
-              data={allTransactionsData}
-              columns={transactionColumns}
-            />
+            <div className="overflow-x-auto">
+              <DataTable
+                data={allTransactionsData}
+                columns={transactionColumns}
+              />
+            </div>
           </div>
         </section>
       </main>
